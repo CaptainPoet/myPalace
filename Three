@@ -1,0 +1,105 @@
+import java.awt.GridLayout;  
+import java.awt.event.ActionEvent;  
+import java.awt.event.ActionListener;  
+import javax.swing.JButton;  
+import javax.swing.JFrame;  
+import javax.swing.JOptionPane;  
+import javax.swing.JPanel;  
+  
+public class Three {  
+  
+    private JFrame mainFrame;  
+    private JPanel jPanel;  
+    private JButton button[][] = new JButton[3][3];  
+    private String whoseTurn = "A";                        //A玩家先玩，所以开始时设置为"A"  
+      
+/*-------------------用九个button代替了九宫格，每个button初始text设置为空--------------------*/  
+    public Three() {  
+        mainFrame = new JFrame("三子棋");  
+        jPanel = new JPanel(new GridLayout(3, 3));  
+        for (int i = 0; i < 3; i++)  
+            for (int j = 0; j < 3; j++) {  
+                button[i][j] = new JButton();  
+                button[i][j].setText(" ");  
+                jPanel.add(button[i][j]);  
+  
+            }  
+        mainFrame.add(jPanel);  
+        mainFrame.setSize(300, 300);  
+        mainFrame.setVisible(true);  
+        mainFrame.setLocation(500, 200);  
+    }  
+      
+/*-----------------------------为每个button设置了点击事件------------------------------*/  
+  
+    public void beginGame() {  
+        for (int i = 0; i < 3; i++)  
+            for (int j = 0; j < 3; j++) {  
+                button[i][j].addActionListener(new ActionListener() {  
+                    @Override  
+                    public void actionPerformed(ActionEvent arg0) {  
+                        ((JButton) arg0.getSource()).setText(whoseTurn);  
+                        if (isWin(whoseTurn)) {  
+                            JOptionPane.showMessageDialog(null, whoseTurn  
+                                    + " win!");  
+                            mainFrame.setVisible(false);  
+                        } else if (isFull()) {  
+                            JOptionPane  
+                                    .showMessageDialog(null, "game is over!");  
+                            mainFrame.setVisible(false);  
+                        } else {  
+                            whoseTurn = (whoseTurn.equals("A")) ? "B" : "A";  
+                        }  
+  
+                    }  
+  
+                });  
+            }  
+    }  
+/*------------------------------判断是否九个格子已经满了---------------------------------*/  
+    public boolean isFull() {  
+        boolean isFull = true;  
+        for (int i = 0; i < 3; i++)  
+            for (int j = 0; j < 3; j++) {  
+                if (button[i][j].getText().equals(" "))  
+                    isFull = false;  
+            }  
+        return isFull;  
+    }  
+  
+/*---------------------------------游戏判断输赢的核心算法，很简单---------------------------*/  
+    public boolean isWin(String s) {  
+        boolean win = false;  
+        for (int i = 0; i < 3; i++) {  
+            if ((button[i][0].getText().equals(s))  
+                    && (button[i][1].getText().equals(s))  
+                    && (button[i][2].getText().equals(s)))  
+                win = true;  
+        }  
+  
+        for (int j = 0; j < 3; j++) {  
+            if ((button[0][j].getText().equals(s))  
+                    && (button[1][j].getText().equals(s))  
+                    && (button[2][j].getText().equals(s)))  
+                win = true;  
+        }  
+  
+        if ((button[0][0].getText().equals(s))  
+                && (button[1][1].getText().equals(s))  
+                && (button[2][2].getText().equals(s)))  
+            win = true;  
+  
+        if ((button[0][2].getText().equals(s))  
+                && (button[1][1].getText().equals(s))  
+                && (button[2][0].getText().equals(s)))  
+            win = true;  
+  
+        return win;  
+    }  
+  
+    public static void main(String[] args) {  
+        Three three = new Three();  
+        three.beginGame();  
+    }  
+  
+}  
